@@ -167,13 +167,13 @@ git push origin main
 
 ## 📝 Environment Variables
 
-| Variable         | Value                       | Required |
-| ---------------- | --------------------------- | -------- |
-| `OPENAI_API_KEY` | your_openai_api_key_here    | ✅       |
-| `OPENAI_MODEL`   | gpt-5-mini-2025-08-07       | ✅       |
-| `MAX_TOKENS`     | 2000                        | ⚪       |
-| `TEMPERATURE`    | 0.7                         | ⚪       |
-| `PORT`           | (auto)                      | ✅       |
+| Variable         | Value                    | Required |
+| ---------------- | ------------------------ | -------- |
+| `OPENAI_API_KEY` | your_openai_api_key_here | ✅       |
+| `OPENAI_MODEL`   | gpt-5-mini-2025-08-07    | ✅       |
+| `MAX_TOKENS`     | 2000                     | ⚪       |
+| `TEMPERATURE`    | 0.7                      | ⚪       |
+| `PORT`           | (auto)                   | ✅       |
 
 ---
 

@@ -37,9 +37,16 @@ except Exception:
 
 app = FastAPI(title="SmartLiva API", version="0.1.0")
 
+# CORS Configuration for Vercel + Local Dev
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://*.vercel.app",           # All Vercel deployments
+        "https://smartliva.vercel.app",   # Production
+        "http://localhost:3000",          # Local dev
+        "http://localhost:8000",          # Backend local
+        "*"                               # Allow all (can restrict later)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
