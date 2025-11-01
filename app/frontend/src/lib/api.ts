@@ -28,19 +28,7 @@ function getBaseURL(): string {
     return envBase.replace(/\/$/, "");
   }
 
-  // Priority 4: Client-side fallback for local development
-  if (typeof window !== "undefined") {
-    const hostname = window.location.hostname;
-    // If localhost, check if we should use API routes or backend
-    if (hostname === "localhost" || hostname === "127.0.0.1") {
-      // Use /api for Next.js API routes
-      return "";
-    }
-    // Otherwise try same host with port 8000 (Docker/custom setup)
-    return `${window.location.protocol}//${hostname}:8000`;
-  }
-
-  // Priority 5: Server-side fallback
+  // Priority 4: Server-side fallback
   return "";
 }
 
