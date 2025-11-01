@@ -1,0 +1,200 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: smartliva_postgres
+    environment:
+      POSTGRES_DB: smartliva_db
+      POSTGRES_USER: smartliva
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-smartliva123}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - smartliva_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartliva -d smartliva_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for session management and caching
+  redis:
+    image: redis:7-alpine
+    container_name: smartliva_redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis123} --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - smartliva_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # SmartLiva Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.production
+    container_name: smartliva_backend
+    environment:
+      # Database
+      DATABASE_URL: postgresql://smartliva:${POSTGRES_PASSWORD:-smartliva123}@postgres:5432/smartliva_db
+
+      # Redis
+      REDIS_URL: redis://:${REDIS_PASSWORD:-redis123}@redis:6379/0
+
+      # Security
+      SECRET_KEY: ${SECRET_KEY:-your-super-secret-key-change-in-production}
+      ENCRYPTION_KEY_FILE: /app/keys/encryption.key
+
+      # Hospital Configuration
+      HOSPITAL_NAME: "${HOSPITAL_NAME:-SmartLiva Medical Center}"
+      HOSPITAL_ADDRESS: "${HOSPITAL_ADDRESS:-123 Medical Plaza}"
+      HOSPITAL_PHONE: "${HOSPITAL_PHONE:-+1-555-MEDICAL}"
+      HOSPITAL_EMAIL: "${HOSPITAL_EMAIL:-info@smartliva.med}"
+      HOSPITAL_LICENSE: "${HOSPITAL_LICENSE:-MED-2024-SMARTLIVA}"
+
+      # Application
+      ENVIRONMENT: production
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-https://smartliva.med,https://app.smartliva.med}"
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS:-smartliva.med,app.smartliva.med}"
+
+      # Monitoring
+      SENTRY_DSN: ${SENTRY_DSN:-}
+
+      # SSL/TLS (if using SSL termination at container level)
+      SSL_CERTFILE: ${SSL_CERTFILE:-}
+      SSL_KEYFILE: ${SSL_KEYFILE:-}
+
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./backend/models:/app/models
+      - ./backend/reports:/app/reports
+      - ./backend/keys:/app/keys
+      - backend_temp:/app/temp
+    ports:
+      - "8000:8000"
+    networks:
+      - smartliva_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # SmartLiva Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_APP_NAME: "${NEXT_PUBLIC_APP_NAME:-SmartLiva Clinical}"
+    container_name: smartliva_frontend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    ports:
+      - "3000:3000"
+    networks:
+      - smartliva_network
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy (Production)
+  nginx:
+    image: nginx:alpine
+    container_name: smartliva_nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/logs:/var/log/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - smartliva_network
+    depends_on:
+      - backend
+      - frontend
+    restart: unless-stopped
+
+  # Monitoring with Prometheus (Optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: smartliva_prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    networks:
+      - smartliva_network
+    restart: unless-stopped
+    profiles: ["monitoring"]
+
+  # Grafana for Monitoring Dashboard (Optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: smartliva_grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin123}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana:/etc/grafana/provisioning
+    ports:
+      - "3001:3000"
+    networks:
+      - smartliva_network
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    profiles: ["monitoring"]
+
+networks:
+  smartliva_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_temp:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local

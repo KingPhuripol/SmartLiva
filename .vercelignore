@@ -1,0 +1,160 @@
+# =============================================
+# CRITICAL: Large files that should NEVER be deployed
+# =============================================
+
+# Model files (usually 100MB - 16GB each!)
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.h5
+*.pkl
+*.pickle
+*.onnx
+*.pb
+maxvit_large_best.pth
+medgemma_model.pth
+
+# Training data (usually GB - TB)
+data/
+datasets/
+train/
+test/
+val/
+
+# =============================================
+# Dependencies (can be reinstalled)
+# =============================================
+
+# Node.js
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn
+
+# Python
+backend/venv/
+backend/env/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# =============================================
+# Build outputs
+# =============================================
+
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# =============================================
+# Development files
+# =============================================
+
+# Notebooks and playground
+Playground/
+*.ipynb
+.ipynb_checkpoints/
+
+# Backend files (not needed for frontend)
+backend/
+smartliva.py
+
+# Jupyter
+Liver_Ultrasound_Detection_Classification_Lightning.ipynb
+
+# =============================================
+# Environment and config
+# =============================================
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.production
+
+# =============================================
+# IDEs and editors
+# =============================================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-*
+
+# =============================================
+# OS files
+# =============================================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+Desktop.ini
+
+# =============================================
+# Docker
+# =============================================
+
+docker-compose.yml
+docker-compose.production.yml
+Dockerfile
+Dockerfile.production
+.dockerignore
+
+# =============================================
+# Debug files
+# =============================================
+
+code
+code.dSYM/
+*.dSYM/
+*.log
+
+# =============================================
+# Testing
+# =============================================
+
+coverage/
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# =============================================
+# Git
+# =============================================
+
+.git/
+.gitignore
+.gitattributes
+
+# =============================================
+# Documentation (optional - comment out if needed)
+# =============================================
+
+# README files (keep only essential ones)
+# README.deployment.md
+# BACKEND_DEPLOYMENT.md
+# MODEL_FILES_GUIDE.md
+
+# =============================================
+# Vercel build cache
+# =============================================
+
+.vercel/

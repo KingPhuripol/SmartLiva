@@ -1,0 +1,26 @@
+[project]
+name = "smartliva-backend"
+version = "0.1.0"
+description = "SmartLiva FastAPI backend"
+requires-python = ">=3.10"
+authors = [{name="SmartLiva"}]
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "pydantic",
+  "python-multipart",
+  "pillow",
+  "numpy",
+  "torch",
+  "scikit-learn",
+  "albumentations",
+  "open-clip-torch",
+  "transformers",
+  "timm",
+  "openai",
+  "python-dotenv",
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
