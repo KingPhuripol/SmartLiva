@@ -1,6 +1,7 @@
 # 🎉 SmartLiva - ระบบวิเคราะห์สุขภาพตับอัจฉริยะ
 
 ## 🌐 URL สาธิต
+
 **เว็บไซต์:** https://smart-liva-kingphuripols-projects.vercel.app
 
 ---
@@ -8,16 +9,19 @@
 ## ✅ ฟีเจอร์ที่พร้อมใช้งาน
 
 ### 1. 🏥 **Dr. HepaSage - ที่ปรึกษาสุขภาพตับ AI**
+
 - **URL:** https://smart-liva-kingphuripols-projects.vercel.app/hepasage
 - ตอบคำถามเกี่ยวกับตับด้วย AI (OpenAI GPT)
 - รองรับหลายภาษา (ไทย, อังกฤษ, เยอรมัน)
 - ให้คำแนะนำทางการแพทย์เบื้องต้น
 
 ### 2. 🏠 **Portal - หน้าหลัก**
+
 - **URL:** https://smart-liva-kingphuripols-projects.vercel.app/portal
 - เข้าถึงฟีเจอร์ทั้งหมด
 
 ### 3. 🌍 **Translation Service**
+
 - **API Endpoint:** `/api/translate`
 - แปลภาษาอัตโนมัติ
 - รองรับหลายภาษา
@@ -27,16 +31,19 @@
 ## 🔧 เทคโนโลยีที่ใช้
 
 ### Frontend
+
 - **Framework:** Next.js 14
 - **UI Library:** Material-UI (MUI)
 - **Hosting:** Vercel (Serverless)
 
 ### Backend (Serverless Functions)
+
 - **API Routes:** Next.js API Routes
 - **AI:** OpenAI GPT (gpt-3.5-turbo)
 - **Translation:** Google Translate API
 
 ### Deployment
+
 - **Platform:** Vercel
 - **Auto-deploy:** GitHub integration
 - **Region:** Global CDN
@@ -46,12 +53,15 @@
 ## 📊 API Endpoints
 
 ### 1. Health Check
+
 ```
 GET /api/health
 ```
+
 ตรวจสอบสถานะระบบ
 
 ### 2. Dr. HepaSage Chat
+
 ```
 POST /api/chat
 Body: {
@@ -60,9 +70,11 @@ Body: {
   "max_new_tokens": 300
 }
 ```
+
 ตอบคำถามเกี่ยวกับสุขภาพตับ
 
 ### 3. Translation
+
 ```
 POST /api/translate
 Body: {
@@ -71,6 +83,7 @@ Body: {
   "target_lang": "en"
 }
 ```
+
 แปลภาษา
 
 ---
@@ -78,6 +91,7 @@ Body: {
 ## 🚀 วิธีใช้งานสำหรับนำเสนอ
 
 ### สาธิต Dr. HepaSage:
+
 1. เปิด: https://smart-liva-kingphuripols-projects.vercel.app/hepasage
 2. พิมพ์คำถามภาษาไทย เช่น:
    - "ตับอักเสบมีกี่ประเภท"
@@ -86,6 +100,7 @@ Body: {
 3. AI จะตอบเป็นภาษาไทยพร้อมข้อมูลทางการแพทย์
 
 ### สาธิตแปลภาษา:
+
 1. ใช้ API endpoint `/api/translate`
 2. ส่ง request ผ่าน Postman หรือ curl
 3. ได้ผลลัพธ์การแปลทันที
@@ -126,6 +141,7 @@ Body: {
 ## 👨‍💻 ผู้พัฒนา
 
 **Phuripol (King)**
+
 - GitHub: KingPhuripol/SmartLiva
 - Technology Stack: Next.js + OpenAI + Vercel
 
@@ -137,11 +153,13 @@ Body: {
 https://smart-liva-kingphuripols-projects.vercel.app
 
 **หน้าหลัก:**
+
 - Portal: /portal
 - Dr. HepaSage: /hepasage
 - Welcome: /welcome
 
 **API Testing:**
+
 ```bash
 # Health Check
 curl https://smart-liva-kingphuripols-projects.vercel.app/api/health
@@ -157,6 +175,7 @@ curl -X POST https://smart-liva-kingphuripols-projects.vercel.app/api/chat \
 ## ✅ Ready for Presentation!
 
 ระบบพร้อมใช้งานเต็มรูปแบบ 100%
+
 - ✅ Frontend: Working
 - ✅ Backend API: Working
 - ✅ AI Chat: Working
